@@ -1,0 +1,21 @@
+# Import the 'textwrap' module, which provides text formatting capabilities.
+import textwrap
+
+# Define a multi-line string 'sample_text' with text content that includes indentation.
+sample_text = '''
+Data Structures are a way of organizing data so that it can be accessed more efficiently depending upon the situation. 
+Data Structures are fundamentals of any programming language around which a program is built.
+Python helps to learn the fundamental of these data structures in a simpler way as compared to other programming languages.
+    '''
+
+# Use 'textwrap.dedent' to remove the common leading whitespace (indentation) from 'sample_text'.
+text_without_Indentation = textwrap.dedent(sample_text)
+
+# Print an empty line for spacing.
+print()
+
+# Print the 'text_without_Indentation', which is the 'sample_text' with indentation removed.
+print(text_without_Indentation)
+
+# Print an empty line for spacing.
+print() 
