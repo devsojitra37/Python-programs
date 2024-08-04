@@ -10,7 +10,6 @@ Python helps to learn the fundamental of these data structures in a simpler way 
 # Use 'textwrap.dedent' to remove the common leading whitespace (indentation) from 'sample_text'.
 text_without_Indentation = textwrap.dedent(sample_text)
 
-# Print an empty line for spacing.
 print()
 
 # Print the 'text_without_Indentation', which is the 'sample_text' with indentation removed.
