@@ -1,0 +1,20 @@
+# Import the 'textwrap' module, which provides text formatting capabilities.
+import textwrap
+
+sample_text ='''
+Data Structures are a way of organizing data so that it can be accessed more efficiently depending upon the situation. 
+Data Structures are fundamentals of any programming language around which a program is built.
+Python helps to learn the fundamental of these data structures in a simpler way as compared to other programming languages.
+    '''
+
+# Use 'textwrap.dedent' to remove common leading whitespace and 'strip' to remove any trailing whitespace.
+text1 = textwrap.dedent(sample_text).strip()
+
+print()
+print(textwrap.fill(text1,
+                    initial_indent='',
+                    subsequent_indent=' ' * 4,
+                    width=80,
+                    ))
+
+print() 
