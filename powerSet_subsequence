@@ -1,5 +1,5 @@
 def power_set(s):
-    # Base case: if the string is empty, return a list with an empty string
+
     if not s:
         return ['']
 
