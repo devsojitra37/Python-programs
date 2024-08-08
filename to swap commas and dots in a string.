@@ -1,0 +1,11 @@
+# Define a string 'amount' with a numerical value in a specific format.
+amount = "77.333,77"
+
+# Create a variable 'maketrans' that references the 'maketrans' method of the 'amount' string.
+maketrans = amount.maketrans
+
+# Translate (replace) the characters ',' with '.', and '.' with ',' in the 'amount' string using the 'maketrans' variable.
+amount = amount.translate(maketrans(',.', '.,'))
+
+# Print the modified 'amount' string with the swapped decimal and comma characters.
+print(amount) 
