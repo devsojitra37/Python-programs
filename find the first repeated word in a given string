@@ -1,0 +1,18 @@
+def first_repeated_word(str1):
+    # Create an empty set 'temp' to store unique words encountered.
+    temp = set()
+    
+    # Iterate through each word in the string 'str1' by splitting it using spaces.
+    for word in str1.split():
+        # Check if the word is already in the 'temp' set.
+        if word in temp:
+            return word  # Return the first repeated word found.
+        else:
+            temp.add(word)  # Add the word to the 'temp' set if it's not already there.
+
+    return 'None'
+
+print(first_repeated_word("ab ca bc ab"))
+print(first_repeated_word("ab ca bc ab ca ab bc"))
+print(first_repeated_word("ab ca bc ca ab bc"))
+print(first_repeated_word("ab ca bc")) 
