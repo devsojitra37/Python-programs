@@ -1,0 +1,25 @@
+#Recursion to count the number of consonants
+
+def count_consonants_vowels(string):
+    # Base case: if the string is empty, return 0 for both counts
+    if not string:
+        return 0, 0
+
+    # Check if the first character is a consonant or vowel
+    if string[0].lower() in 'bcdfghjklmnpqrstvwxyz':
+        # If it's a consonant, count it and recurse on the rest of the string
+        consonant_count, vowel_count = count_consonants_vowels(string[1:])
+        return consonant_count + 1, vowel_count
+    elif string[0].lower() in 'aeiou':
+        # If it's a vowel, count it and recurse on the rest of the string
+        consonant_count, vowel_count = count_consonants_vowels(string[1:])
+        return consonant_count, vowel_count + 1
+    else:
+        # If it's neither a consonant nor a vowel, recurse on the rest of the string
+        return count_consonants_vowels(string[1:])
+
+input_string = "Hello, World!"
+consonant_count, vowel_count = count_consonants_vowels(input_string)
+print(f"The string '{input_string}' contains:")
+print(f"  * {consonant_count} consonants")
+print(f"  * {vowel_count} vowels")
