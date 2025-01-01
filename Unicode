@@ -1,0 +1,15 @@
+import unicodedata
+
+s = "⽉⽇⽊⽉⽉⼥⽇⽊⽊⼥"
+
+# Get the list of code points for each character in the string
+code_points = [ord(c) for c in s]
+
+# Print the Unicode code points for each character
+for i, cp in enumerate(code_points):
+    try:
+        # Get the Unicode character name for the code point
+        unicode_char = unicodedata.name(chr(cp))
+        print(f"Character {i} ({unicode_char}): {cp}")
+    except ValueError:
+        print(f"Character {i}: {cp} (No Unicode name found)")
