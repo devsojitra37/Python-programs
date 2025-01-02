@@ -1,0 +1,126 @@
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import joblib
+import os
+
+# Knowledge base for symptom diagnosis
+knowledge_base = {
+    "Common Cold": {"symptoms": ["fever", "cough", "sore throat", "runny nose"], "confidence": 0.7},
+    "Flu": {"symptoms": ["fever", "cough", "body ache", "chills", "fatigue"], "confidence": 0.8},
+    "COVID-19": {"symptoms": ["fever", "cough", "shortness of breath", "fatigue", "loss of taste or smell"], "confidence": 0.9},
+    "Measles": {"symptoms": ["fever", "rash", "runny nose", "red eyes"], "confidence": 0.85},
+    "Strep Throat": {"symptoms": ["sore throat", "fever", "swollen lymph nodes", "headache"], "confidence": 0.75},
+    "Pneumonia": {"symptoms": ["fever", "cough", "chest pain", "shortness of breath", "fatigue"], "confidence": 0.88},
+    "Malaria": {"symptoms": ["fever", "chills", "sweating", "headache", "nausea"], "confidence": 0.9},
+    "Typhoid": {"symptoms": ["fever", "abdominal pain", "constipation", "rash", "weakness"], "confidence": 0.82},
+    "Gastroenteritis": {"symptoms": ["nausea", "vomiting", "diarrhea", "abdominal pain", "fever"], "confidence": 0.78},
+    "Dengue": {"symptoms": ["fever", "rash", "headache", "joint pain", "eye pain"], "confidence": 0.87}
+}
+
+def diagnose(symptoms, knowledge_base):
+    diagnoses = []
+    for disease, details in knowledge_base.items():
+        matched_symptoms = [symptom for symptom in symptoms if symptom in details["symptoms"]]
+        match_ratio = len(matched_symptoms) / len(details["symptoms"])
+        confidence_score = match_ratio * details["confidence"]
+        if confidence_score > 0.5:  # Only consider matches with confidence > 50%
+            diagnoses.append((disease, confidence_score))
+    # Sort by confidence score in descending order
+    return sorted(diagnoses, key=lambda x: x[1], reverse=True)
+
+def main():
+    print("AI-Based Medical Diagnosis System")
+    print("Enter your symptoms (comma-separated):")
+    user_input = input().lower()
+    symptoms = [symptom.strip() for symptom in user_input.split(",")]
+    results = diagnose(symptoms, knowledge_base)
+
+    if results:
+        print("\nPossible Diagnoses")
+        for disease, confidence in results:
+            print(f"{disease} (confidence: {confidence * 100:.1f}%)")
+    else:
+        print("No matching diseases found.")
+
+def train_and_save_model():
+    """
+    Train a model using dummy data and save the model and scaler.
+    """
+    print("Training model...")
+    # Example dataset
+    data = {
+        "Fever": [1, 1, 0, 1, 0, 0, 1],
+        "Cough": [1, 0, 1, 1, 0, 0, 1],
+        "Fatigue": [1, 1, 0, 1, 0, 0, 0],
+        "Difficulty_Breathing": [0, 1, 0, 1, 0, 0, 1],
+        "Age": [25, 45, 35, 60, 40, 30, 50],
+        "Gender": [1, 0, 1, 0, 1, 0, 1],
+        "Blood_Pressure": [1, 1, 0, 1, 0, 0, 1],
+        "Cholesterol": [0, 1, 0, 1, 0, 0, 1],
+        "Disease": ["Flu", "COVID-19", "Common Cold", "COVID-19", "Common Cold", "Flu", "COVID-19"],
+    }
+    # Convert to DataFrame
+    df = pd.DataFrame(data)
+    # Features and labels ```python
+    X = df.drop("Disease", axis=1)
+    y = df["Disease"]
+    # Normalize Age
+    scaler = StandardScaler()
+    X["Age"] = scaler.fit_transform(X[["Age"]])
+    # Split the dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Train the model
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, y_train)
+    # Save the model and scaler
+    joblib.dump(model, "disease_prediction_model.pkl")
+    joblib.dump(scaler, "scaler.pkl")
+    print("Model and scaler saved successfully!")
+
+def load_model_and_predict():
+    """
+    Load the saved model and scaler, and predict diseases based on user inputs.
+    """
+    if not os.path.exists("disease_prediction_model.pkl") or not os.path.exists("scaler.pkl"):
+        print("Model or scaler not found. Training a new model...")
+        train_and_save_model()
+
+    # Load model and scaler
+    model = joblib.load("disease_prediction_model.pkl")
+    scaler = joblib.load("scaler.pkl")
+
+    print("\nEnter the following information for diagnosis:")
+    try:
+        # Collect inputs
+        fever = int(input("Fever (1 for Yes, 0 for No): "))
+        cough = int(input("Cough (1 for Yes, 0 for No): "))
+        fatigue = int(input("Fatigue (1 for Yes, 0 for No): "))
+        difficulty_breathing = int(input("Difficulty Breathing (1 for Yes, 0 for No): "))
+        age = float(input("Age (in years): "))
+        gender = int(input("Gender (1 for Male, 0 for Female): "))
+        blood_pressure = int(input("Blood Pressure (1 for High, 0 for Normal): "))
+        cholesterol = int(input("Cholesterol Level (1 for High, 0 for Normal): "))
+
+        # Validate binary inputs
+        binary_inputs = [fever, cough, fatigue, difficulty_breathing, gender, blood_pressure, cholesterol]
+        if not all(x in [0, 1] for x in binary_inputs):
+            print("Error: Binary inputs must be either 0 or 1.")
+            return
+
+        # Normalize age
+        age_normalized = scaler.transform([[age]])[0][0]
+        # Prepare the input features as a DataFrame
+        input_features = pd.DataFrame([[fever, cough, fatigue, difficulty_breathing, age_normalized, gender, blood_pressure, cholesterol]],
+                                      columns=["Fever", "Cough", "Fatigue", "Difficulty_Breathing", "Age", "Gender", "Blood_Pressure", "Cholesterol"])
+        # Make prediction
+        prediction = model.predict(input_features)
+        print(f"\nPredicted Disease: {prediction[0]}")
+    except ValueError:
+        print("Error: Invalid input. Please ensure all inputs are correctly formatted.")
+
+if __name__ == "__main__":
+    main()
+    load_model_and_predict()
