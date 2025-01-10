@@ -1,0 +1,61 @@
+import random
+
+# Number of products and max capacity per product
+num_products = 3
+max_capacity = 10
+
+# Generate random profits for each product (between $10 and $30)
+profit_per_unit = [random.randint(10, 30) for _ in range(num_products)]
+
+# Start with a random inventory (between 0 and max capacity)
+inventory = [random.randint(0, max_capacity) for _ in range(num_products)]
+
+# Calculate the profit of a given inventory
+def calculate_profit(inventory):
+    return sum(inventory[i] * profit_per_unit[i] for i in range(num_products))
+
+# Hill Climbing algorithm (keep improving until no better move)
+def hill_climbing():
+    current_inventory = inventory[:]
+    current_profit = calculate_profit(current_inventory)
+    print(f"Starting inventory: {current_inventory}, profit: ${current_profit}")
+
+    while True:
+        best_inventory = current_inventory[:]
+        best_profit = current_profit
+
+        # Try small changes: increase or decrease the stock of each product
+        for i in range(num_products):
+            # Increase the stock of product i, if possible
+            if current_inventory[i] < max_capacity:
+                new_inventory = current_inventory[:]
+                new_inventory[i] += 1
+                new_profit = calculate_profit(new_inventory)
+                if new_profit > best_profit:
+                    best_inventory = new_inventory
+                    best_profit = new_profit
+
+            # Decrease the stock of product i, if possible
+            if current_inventory[i] > 0:
+                new_inventory = current_inventory[:]
+                new_inventory[i] -= 1
+                new_profit = calculate_profit(new_inventory)
+                if new_profit > best_profit:
+                    best_inventory = new_inventory
+                    best_profit = new_profit
+
+        # If no improvement, stop
+        if best_inventory == current_inventory:
+            break
+
+        current_inventory = best_inventory
+        current_profit = best_profit
+        print(f"New inventory: {current_inventory}, profit: ${current_profit}")
+
+    return best_inventory, best_profit
+
+# Run the Hill Climbing algorithm
+print("Hill Climbing:")
+best_inventory, best_profit = hill_climbing()
+print(f"Best inventory: {best_inventory}")
+print(f"Total profit: ${best_profit}")
