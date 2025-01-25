@@ -1,0 +1,12 @@
+s = "⽉⽇⽊⽉⽉⼥⽇⽊⽊⼥"
+max_byte = 0
+for c in s:
+  current_byte = 0
+  if ord(c) <= 127:
+    current_byte = 1
+  elif ord(c)>=128 and ord(c)<=65535:
+    current_byte = 2
+  else:
+    current_byte = 4
+  max_byte = max(max_byte, current_byte)
+print(max_byte)
