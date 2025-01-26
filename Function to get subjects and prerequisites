@@ -1,0 +1,205 @@
+def get_subjects_and_prerequisites():
+    """Returns a dictionary containing subjects, their prerequisites, and questions."""
+    return {
+        "Artificial Intelligence": {
+            "Prerequisites": {
+                "Machine Learning Basics": [
+                    {"question": "What is the goal of Machine Learning?",
+                     "options": ["A) Teach machines to think", "B) Extract patterns from data", "C) Build robots", "D) None of the above"],
+                     "answer": "B"},
+                    {"question": "Which is a supervised learning algorithm?",
+                     "options": ["A) K-means", "B) Linear Regression", "C) DBSCAN", "D) None of the above"],
+                     "answer": "B"},
+                    {"question" : "What is overfitting in ML?",
+                     "options": ["A) Poor generalization", "B) Perfect prediction", "C) Poor training accuracy", "D) None of the above"],
+                     "answer": "A"}
+                ],
+                "Neural Networks": [
+                    {"question": "What is a neural network?",
+                     "options": ["A) A machine learning model", "B) A set of neurons", "C) A physical brain structure", "D) None of the above"],
+                     "answer": "A"},
+                    {"question": "What is a perceptron?",
+                     "options": ["A) The simplest neural network unit", "B) A decision tree", "C) A data clustering method", "D) None of the above"],
+                     "answer": "A"},
+                    {"question": "What is backpropagation?",
+                     "options": ["A) An optimization algorithm", "B) A neural network training algorithm", "C) A clustering technique", "D) None of the above"],
+                     "answer": "B"}
+                ],
+                "Deep Learning": [
+                    {"question": "What is the primary goal of deep learning?",
+                     "options": ["A) Data compression", "B) Feature extraction", "C) Learning pattern from data", "D) Linear Regression"],
+                     "answer": "C"},
+                    {"question": "What does 'epoch' mean in deep learning?",
+                     "options": ["A) The number of layers in a neural network", "B) The learning rate of optimizer", "C) one complete pass through the entire training dataset", "D) The type of activation function used"],
+                     "answer": "C"},
+                    {"question": "How many layers are there in a typical feed-forward neural network?",
+                     "options": ["A) 1", "B) 2", "C) 3", "D) None of the above"],
+                     "answer": "C"}
+                ]
+            }
+        },
+        ".NET": {
+            "Prerequisites": {
+                "CLR": [
+                    {"question": "What does CLR stand for?",
+                     "options": ["A) Common Language Runtime", "B) Common Language Repository", "C) Code Language Runtime", "D) Central Language Runtime"],
+                     "answer": "A"},
+                    {"question": "Which language is supported by CLR?",
+                     "options": ["A) Python", "B) JavaScript", "C) C#", "D) All of the above"],
+                     "answer": "C"},
+                    {"question": "What is the purpose of garbage collection in CLR?",
+                     "options": ["A) Clean UI", "B) Manage memory", "C) Optimize execution speed", "D) Debug code"],
+                     "answer": "B"}
+                ],
+                "ASP.NET": [
+                    {"question": "What is ASP.NET primarily used for?",
+                     "options": ["A) Desktop applications", "B) Web development", "C) Mobile app development", "D) Database management"],
+                     "answer": "B"},
+                    {"question": "Which method starts an ASP.NET application?",
+                     "options": ["A) Execute()", "B) Run()", "C) Main()", "D) Start()"],
+                     "answer": "C"},
+                    {"question": "What is Razor in ASP.NET?",
+                     "options": ["A) A compiler", "B) A markup syntax", "C) A database", "D) An API"],
+                     "answer": "B"}
+                ]
+            }
+        },
+        "Mern Stack": {
+            "Prerequisites": {
+                "Mongo DB": [
+                    {"question": "What type of database is MongoDB?",
+                     "options": ["A) Relational", "B) Document Oriented", "C) Graph", "D) Key-value"],
+                     "answer": "B"},
+                    {"question": "In MongoDB, what does the term 'collection' refer to?",
+                     "options": ["A) A group of databases", "B) A single Document", "C) A group of documents", "D) A type of index"],
+                     "answer": "C"},
+                    {"question": "Which operating system is NOT supported by MongoDB?",
+                     "options": ["A) Windows", "B) Linux", "C) Mac OS", "D) iOS"],
+                     "answer": "C"}
+                ],
+                "Node js": [
+                    {"question": "What is Node.js primarily used for?",
+                     "options": ["A) To create client-side interfaces", "B) To act as a DBMS", "C) To build server side applications", "D) To enhance CSS"],
+                     "answer": "C"},
+                    {"question": "Which engine powers Node.js?",
+                     "options": ["A) V8", "B) SpiderMonkey", "C) JavaScript core", "D) Chakra"],
+                     "answer": "A"},
+                    {"question": "Which programming language is Node.js based on?",
+                     "options": ["A) Python", "B) Java", "C) JavaScript", "D) Ruby"],
+                     "answer": "C"}
+                ]
+            }
+        }
+    }
+
+# Function to ask questions for a specific prerequisite
+def ask_questions(prerequisite_name, questions):
+    """Conducts a quiz for the given prerequisite and returns the score."""
+    print(f"\n--- {prerequisite_name} ---")
+    score = 0
+    for i, question in enumerate(questions, 1):
+        print(f"Q{i}: {question['question']}")
+        for option in question['options']:
+            print(option)
+        answer = input("Your answer: ").strip().upper()
+        if answer == question['answer']:
+            score += 1
+    return score
+
+# Means-End Analysis function
+def means_end_analysis(prerequisite_results):
+    """Analyzes the gap between current and desired performance."""
+    print("\n--- Means-End Analysis ---")
+    for prerequisite, score in prerequisite_results.items():
+        gap = 3 - score  # Desired score is 3 for each prerequisite
+        if gap > 0:
+            print(f"{prerequisite}: You need to improve by {gap} points.")
+        else:
+            print(f"{prerequisite}: No gap. Excellent performance.")
+
+# Heuristic Search function
+def heuristic_search(prerequisite_results):
+    """Provides heuristic-based recommendations for improvement."""
+    print("\n--- Heuristic Search Recommendations ---")
+    for prerequisite, score in prerequisite_results.items():
+        if score == 3:
+            recommendation = "Advance to more complex topics related to this prerequisite."
+        elif score == 2:
+            recommendation = "Focus on practical exercises to strengthen understanding."
+        elif score == 1:
+            recommendation = "You have to work very hard!."
+        else:
+            recommendation = "Start studying now!."
+        print(f"{prerequisite}: {recommendation}")
+
+# Function to provide recommendations
+def generate_recommendations(subject_name, prerequisite_results):
+    """Generates recommendations based on the results of the quiz."""
+    print("\n--- Prerequisite-wise Recommendations ---")
+    for prerequisite, score in prerequisite_results.items():
+        if score == 3:
+            level = "Excellent"
+            recommendation = "You have mastered this prerequisite. Move on to advanced topics."
+        elif score == 2:
+            level = "Good"
+            recommendation = "Focus on practicing weak areas for improvement."
+        elif score == 1:
+            level = "Bad"
+            recommendation = "You have to work very hard."
+        else:
+            level = "Needs Improvement"
+            recommendation = "Revise the prerequisite thoroughly and practice more questions."
+        print(f"{prerequisite}: {score}/3 ({level}) - {recommendation}")
+
+    # Overall recommendation
+    total_score = sum(prerequisite_results.values())
+    max_score = len(prerequisite_results) * 3
+    overall_percentage = (total_score / max_score) * 100
+    print("\n--- Overall Performance ---")
+    print(f"Overall Score: {total_score}/{max_score} ({overall_percentage:.2f}%)")
+    if overall_percentage >= 80:
+        print("Recommendation: Excellent performance! Ready to explore new areas.")
+    elif overall_percentage >= 50:
+        print("Recommendation: Good performance. Focus on weaker prerequisites to improve.")
+    elif overall_percentage >= 40:
+        print("Recommendation: Below average performance. Focus on weaker prerequisites to improve.")
+    elif overall_percentage >= 30:
+        print("Recommendation: Bad. Work hard to improve your grades.")
+    elif overall_percentage >= 20:
+        print("Recommendation: Very Bad performance. Work hard to improve your grades.")
+    elif overall_percentage >= 10:
+        print("Recommendation: Worst performance. Start studying now.")
+    else:
+        print("Recommendation: Needs significant improvement. Revise the fundamentals.")
+
+# Main function to execute the program
+def main():
+    """Main function to execute the quiz and provide recommendations."""
+    subjects = get_subjects_and_prerequisites()
+    print("\nAvailable Subjects:")
+    for i, subject in enumerate(subjects.keys(), 1):
+        print(f"{i}. {subject}")
+
+    # Choose a subject
+    subject_choice = int(input("Select a subject by number: ")) - 1
+    subject_name = list(subjects.keys())[subject_choice]
+    subject_data = subjects[subject_name]
+
+    # Quiz for each prerequisite
+    prerequisite_results = {}
+    for prerequisite_name, questions in subject_data["Prerequisites"].items():
+        score = ask_questions(prerequisite_name, questions)
+        prerequisite_results[prerequisite_name] = score
+
+    # Perform Means-End Analysis
+    means_end_analysis(prerequisite_results)
+
+    # Perform Heuristic Search
+    heuristic_search(prerequisite_results)
+
+    # Generate Recommendations
+    generate_recommendations(subject_name, prerequisite_results)
+
+# Run the program
+if __name__ == "__main__":
+    main()
