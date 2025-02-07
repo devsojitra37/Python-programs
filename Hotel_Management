@@ -1,0 +1,96 @@
+from datetime import datetime, timedelta
+
+def hotel_management_system():
+    room_types = ["Single", "Double", "Suite"]
+    room_bookings = {}
+
+    # Helper function for scheduling hotel bookings
+    def schedule_bookings(room_type, rooms_available, guests_reported):
+        max_guests_per_room = 2 if room_type != "Suite" else 4
+        total_capacity = rooms_available * max_guests_per_room
+        offline_guests = max(0, total_capacity - guests_reported)
+        final_total_guests = guests_reported + offline_guests
+
+        check_in_time = datetime.strptime("14:00", "%H:%M")
+        check_out_time = datetime.strptime("12:00", "%H:%M")
+
+        room_schedule = {i: [] for i in range(1, rooms_available + 1)}
+        guest_counter = 1
+
+        for guest in range(1, final_total_guests + 1):
+            room_number = (guest - 1) % rooms_available + 1
+            appointment_time = check_in_time + timedelta(hours=((guest - 1) // rooms_available))
+
+            formatted_time = appointment_time.strftime("%H:%M")
+            room_schedule[room_number].append((guest, formatted_time, room_type))
+            room_bookings[(room_type, guest)] = (formatted_time, room_number)
+
+        return room_schedule, offline_guests, final_total_guests
+
+    # Process room types
+    for room_type in room_types:
+        print(f"\nRoom Type: {room_type}")
+
+        # Input for available rooms and guests
+        max_rooms = 10 if room_type == "Single" else 5
+        rooms_available = int(input(f"Enter the number of rooms available (1-{max_rooms}): "))
+        if not 1 <= rooms_available <= max_rooms:
+            print(f"Invalid input. Rooms available should be between 1 and {max_rooms}.")
+            return
+
+        guests_reported = int(input("Enter the number of guests reported (0-10): "))
+        if not 0 <= guests_reported <= 10:
+            print("Invalid input. Guests reported should be between 0 and 10.")
+            return
+
+        # Schedule bookings
+        room_schedule, offline_guests, final_total_guests = schedule_bookings(room_type, rooms_available, guests_reported)
+
+        # Display results
+        print(f"Total reported guests: {guests_reported}")
+        print(f"Total offline guests scheduled: {offline_guests}")
+        print(f"Final total guests: {final_total_guests}")
+        print(f"Message to front desk: GENERATE OFFLINE GUESTS ONLY: {offline_guests}")
+
+        # Display room schedules
+        for room, bookings in room_schedule.items():
+            print(f"\nRoom {room} Schedule:")
+            for guest, time, room_type in bookings:
+                print(f"Guest {guest} - Check-in at {time} in {room_type} Room")
+
+    # Allow guests to check their booking
+    while True:
+        room_type = input("\nEnter your room type (Single or Double or Suite) to check your booking: ")
+        if room_type not in room_types:
+            print("Invalid room type. Please enter 'Single' or 'Double' or 'Suite'.")
+            continue
+
+        try:
+            booking_number = int(input("Enter your booking number: "))
+        except ValueError:
+            print("Invalid input. Please enter a valid booking number.")
+            continue
+
+        if (room_type, booking_number) in room_bookings:
+            booking_time, room_number = room_bookings[(room_type, booking_number)]
+            print(f"Your check-in time: {booking_time} in Room {room_number}")
+            
+            # Ask if the guest wants to check out
+            check_out = input(f"Would you like to check out from Room {room_number}? (y/n): ").lower()
+            if check_out == 'y':
+                # Check-out logic
+                del room_bookings[(room_type, booking_number)]  # Remove the booking
+                print(f"Guest {booking_number} has checked out from Room {room_number}. Room is now available.")
+            else:
+                print(f"Guest {booking_number} chose not to check out yet.")
+
+        else:
+            print("Invalid booking number. Please try again.")
+
+        # Ask if the user wants to check another booking
+        check_another = input("Would you like to check another booking? (y/n): ").lower()
+        if check_another != 'y':
+            break
+
+# Call the function
+hotel_management_system()
