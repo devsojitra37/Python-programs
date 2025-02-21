@@ -1,0 +1,73 @@
+from collections import deque
+
+# Capacities of the jugs
+CAPACITY_A = 5
+CAPACITY_B = 3
+
+# Goal: Jug A must have 5 liters
+def goal(state):
+    return state[0] == 4
+
+# BFS to find the solution
+def bfs(start):
+    visited = set()
+    queue = deque([(start, [])])  # (current state, path to reach it)
+    visited.add(start)
+
+    while queue:
+        state, path = queue.popleft()
+        if goal(state):
+            return path + [state]
+
+        a, b = state
+
+        # Generate all possible states from the current state
+
+        # Fill Jug A
+        if a < CAPACITY_A and (CAPACITY_A, b) not in visited:
+            visited.add((CAPACITY_A, b))
+            queue.append(((CAPACITY_A, b), path + [state]))
+
+        # Fill Jug B
+        if b < CAPACITY_B and (a, CAPACITY_B) not in visited:
+            visited.add((a, CAPACITY_B))
+            queue.append(((a, CAPACITY_B), path + [state]))
+
+        # Pour from A to B
+        if a > 0 and b < CAPACITY_B:
+            pour = min(a, CAPACITY_B - b)
+            new_state = (a - pour, b + pour)
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, path + [state]))
+
+        # Pour from B to A
+        if b > 0 and a < CAPACITY_A:
+            pour = min(b, CAPACITY_A - a)
+            new_state = (a + pour, b - pour)
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, path + [state]))
+
+        # Empty Jug A
+        if a > 0 and (0, b) not in visited:
+            visited.add((0, b))
+            queue.append(((0, b), path + [state]))
+
+        # Empty Jug B
+        if b > 0 and (a, 0) not in visited:
+            visited.add((a, 0))
+            queue.append(((a, 0), path + [state]))
+
+    return None  # No solution found
+
+# Solve using BFS
+start_state = (0, 0)  # Both jugs initially empty
+solution = bfs(start_state)
+
+if solution:
+    print("Path to fill Jug A to 5 liters (BFS):")
+    for step in solution:
+        print(step)
+else:
+    print("No solution found.")
