@@ -1,0 +1,65 @@
+# Capacities of the jugs
+CAPACITY_A = 6
+CAPACITY_B = 2
+
+# Goal: Jug A must have 5 liters
+def goal(state):
+    return state[0] == 4
+
+# DFS to find the solution
+def dfs(state, visited, path):
+    if goal(state):
+        return path + [state]
+
+    visited.add(state)
+    a, b = state
+    actions = []
+
+    # Generate all possible next states
+
+    # Fill Jug A
+    if a < CAPACITY_A and (CAPACITY_A, b) not in visited:
+        actions.append((CAPACITY_A, b))
+    # Fill Jug B
+    if b < CAPACITY_B and (a, CAPACITY_B) not in visited:
+        actions.append((a, CAPACITY_B))
+    # Pour from A to B
+    if a > 0 and b < CAPACITY_B:
+        pour = min(a, CAPACITY_B - b)
+        new_state = (a - pour, b + pour)
+        if new_state not in visited:
+            actions.append(new_state)
+    # Pour from B to A
+    if b > 0 and a < CAPACITY_A:
+        pour = min(b, CAPACITY_A - a)
+        new_state = (a + pour, b - pour)
+        if new_state not in visited:
+            actions.append(new_state)
+    # Empty Jug A
+    if a > 0 and (0, b) not in visited:
+        actions.append((0, b))
+    # Empty Jug B
+    if b > 0 and (a, 0) not in visited:
+        actions.append((a, 0))
+
+    # Explore each possible action using DFS
+    for next_state in actions:
+        if next_state not in visited:
+            result = dfs(next_state, visited, path + [state])
+            if result:
+                return result
+
+    return None  # No solution found
+
+# Solve using DFS
+start_state = (0, 0)  # Both jugs initially empty
+visited = set()
+
+solution = dfs(start_state, visited, [])
+
+if solution:
+    print("Path to fill Jug A to 5 liters (DFS):")
+    for step in solution:
+        print(step)
+else:
+    print("No solution found.")
